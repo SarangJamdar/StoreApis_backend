@@ -1,43 +1,50 @@
 package com.sarang.Services;
 
-//import java.util.List;
+import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.sarang.Entity.Category;
-import com.sarang.Repositories.CategoryRepository;
+import com.sarang.dao.CategoryDao;
 
 @Service
 public class CategoryService {
 	@Autowired
-    private CategoryRepository categoryRepository;
+	CategoryDao dao;
 
-//    public List<Category> getAllCategories() {
-//        return categoryRepository.findAll();
-//    }
-	   public Page<Category> getCategories(int page) {
-	        return categoryRepository.findAll(PageRequest.of(page - 1, 10));
-	    }	
+	public List<Category> getallCategory(int page,int size) {
+		List<Category> list = dao.getallCategory(page,size);
+		return list;
+	}
 
-    public Category getCategoryById(Long id) {
-        return categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found with ID: " + id));
-    }
+	public String addCategory(Category c) {
+		String msg = dao.addCategory(c);
+		if (Objects.isNull(c)) {
+			msg = "Category is not added";
+		}
+		return msg;
+	}
 
-    public Category createCategory(Category category) {
-        return categoryRepository.save(category);
-    }
+	public Category getParticularCategoryID(int id) {
+		Category c = dao.getParticularCategoryID(id);
+		return c;
+	}
 
-    public Category updateCategory(Long id, Category category) {
-        Category existing = getCategoryById(id);
-        existing.setName(category.getName());
-        return categoryRepository.save(existing);
-    }
+	public String updateCategory(Category c, int id) {
+		String msg = dao.updateCategory(c, id);
+		if (Objects.isNull(c)) {
+			msg = "Category is not updated";
+		}
+		return msg;
+	}
 
-    public void deleteCategory(Long id) {
-        categoryRepository.deleteById(id);
-    }
+	public String deleteCategory(int id) {
+		String msg = dao.deleteCategory(id);
+		if (Objects.isNull(id)) {
+			msg = "Category is not Deleted";
+		}
+		return msg;
+	}
 }

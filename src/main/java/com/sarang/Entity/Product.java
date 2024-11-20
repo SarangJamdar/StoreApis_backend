@@ -1,5 +1,7 @@
 package com.sarang.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +25,7 @@ public class Product {
 	 private Double price;
 
 	 @ManyToOne
-	 @JoinColumn(name = "category_id", nullable = false)
+	 @JoinColumn(name = "category_id")
+	 @JsonIgnore
 	 private Category category;
 }

@@ -1,52 +1,55 @@
 package com.sarang.Services;
 
-//import java.util.List;
+import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import com.sarang.Entity.Category;
 import com.sarang.Entity.Product;
-import com.sarang.Repositories.ProductRepository;
+import com.sarang.dao.ProductDao;
 
 @Service
 public class ProductService {
 	@Autowired
-    private ProductRepository productRepository;
+	ProductDao dao;
+	
 
-    @Autowired
-    private CategoryService categoryService;
+	public String addProduct(Product p) {
+		String msg = dao.addProduct(p);
+		if (Objects.isNull(p)) {
+			msg = "Product is not added";
+		}
+		return msg;
+	}
 
-//    public List<Product> getAllProducts() {
-//        return productRepository.findAll();
-//    }
-    public Page<Product> getProducts(int page) {
-        return productRepository.findAll(PageRequest.of(page - 1, 10));
-    }
 
-    public Product getProductById(Long id) {
-        return productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + id));
-    }
+	public List<Product> getallProduct(int page,int size) {
+		List<Product> list = dao.getallProduct(page,size);
+		return list;
+	}
 
-    public Product createProduct(Product product) {
-        Category category = categoryService.getCategoryById(product.getCategory().getId());
-        product.setCategory(category);
-        return productRepository.save(product);
-    }
 
-    public Product updateProduct(Long id, Product product) {
-        Product existing = getProductById(id);
-        Category category = categoryService.getCategoryById(product.getCategory().getId());
-        existing.setName(product.getName());
-        existing.setPrice(product.getPrice());
-        existing.setCategory(category);
-        return productRepository.save(existing);
-    }
+	public Product getParticularProductID(int id) {
+		Product p = dao.getParticularProductID(id);
+		return p;
+	}
 
-    public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
-    }
+
+	public String updateProduct(Product p, int id) {
+		String msg = dao.updateProduct(p, id);
+		if (Objects.isNull(p)) {
+			msg = "Product is not updated";
+		}
+		return msg;
+	}
+
+
+	public String deleteProduct(int id) {
+		String msg = dao.deleteProduct(id);
+		if (Objects.isNull(id)) {
+			msg = "Product is not Deleted";
+		}
+		return msg;
+	}
 }
